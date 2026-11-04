@@ -167,7 +167,7 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
     logo_b64 = get_logo_base64()
 
     with st.container(key="duckshow_navbar_container"):
-        col_brand, col_menu, col_right = st.columns([1.5, 7.1, 1.4], vertical_alignment="center")
+        col_brand, col_menu, col_right = st.columns([1.5, 6.7, 1.8], vertical_alignment="center")
 
         with col_brand:
             logo_img_tag = f'<img src="data:image/png;base64,{logo_b64}" class="cineverse-nav-full-logo" alt="Cineverse" />' if logo_b64 else '<div class="cineverse-nav-wordmark"><span class="cineverse-word-cine">Cine</span><span class="cineverse-word-verse">verse</span></div>'
@@ -191,9 +191,9 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
                         st.rerun()
 
         with col_right:
-            c_search, c_bell, c_avatar = st.columns([1.0, 0.9, 1.1], vertical_alignment="center")
+            c_search, c_bell, c_avatar = st.columns([1, 1, 1], vertical_alignment="center")
             with c_search:
-                with st.popover("🔍", help="Search movies, genres & moods"):
+                with st.popover("🔍", help="Search movies, genres & moods", key="nav_search_popover"):
                     search_query = st.text_input(
                         "Search",
                         placeholder="Search movies, genres...",

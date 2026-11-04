@@ -217,8 +217,6 @@ div.st-key-duckshow_navbar_container [data-testid="stHorizontalBlock"] {
 }
 
 /* Netmirror / Netflix Style Pill Navigation Buttons */
-div.st-key-duckshow_navbar_container div.stButton > button,
-div.st-key-duckshow_navbar_container button,
 div[class*="st-key-dnav_item_"] div.stButton > button,
 div[class*="st-key-dnav_item_"] button {
     background: rgba(45, 45, 52, 0.75) !important;
@@ -242,8 +240,6 @@ div[class*="st-key-dnav_item_"] button {
     cursor: pointer !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button p,
-div.st-key-duckshow_navbar_container button p,
 div[class*="st-key-dnav_item_"] div.stButton > button p,
 div[class*="st-key-dnav_item_"] button p {
     color: inherit !important;
@@ -258,8 +254,6 @@ div[class*="st-key-dnav_item_"] button p {
 }
 
 /* Hover state for pill buttons */
-div.st-key-duckshow_navbar_container div.stButton > button:hover,
-div.st-key-duckshow_navbar_container button:hover,
 div[class*="st-key-dnav_item_"] div.stButton > button:hover,
 div[class*="st-key-dnav_item_"] button:hover {
     color: #FFFFFF !important;
@@ -271,18 +265,29 @@ div[class*="st-key-dnav_item_"] button:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45) !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button:hover p,
-div.st-key-duckshow_navbar_container button:hover p,
 div[class*="st-key-dnav_item_"] div.stButton > button:hover p,
 div[class*="st-key-dnav_item_"] button:hover p {
     color: #FFFFFF !important;
 }
 
 /* Active navigation pill (Home) with lighter frosted background matching reference */
-div.st-key-duckshow_navbar_container div.stButton > button[kind="primary"],
-div.st-key-duckshow_navbar_container button[kind="primary"],
 div[class*="st-key-dnav_item_"] div.stButton > button[kind="primary"],
 div[class*="st-key-dnav_item_"] button[kind="primary"] {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+    background: rgba(90, 90, 105, 0.95) !important;
+    background-color: rgba(90, 90, 105, 0.95) !important;
+    background-image: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    border-radius: 9999px !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+}
+
+div[class*="st-key-dnav_item_"] div.stButton > button[kind="primary"] p,
+div[class*="st-key-dnav_item_"] button[kind="primary"] p {
+    color: #FFFFFF !important;
+    font-weight: 800 !important;
+}
     color: #FFFFFF !important;
     font-weight: 800 !important;
     background: rgba(90, 90, 105, 0.95) !important;
@@ -2720,8 +2725,6 @@ div.st-key-duckshow_navbar_container [data-testid="stHorizontalBlock"] {
     gap: 4px !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button,
-div.st-key-duckshow_navbar_container button,
 div[class*="st-key-dnav_item_"] div.stButton > button,
 div[class*="st-key-dnav_item_"] button {
     background: rgba(45, 45, 52, 0.75) !important;
@@ -2745,8 +2748,6 @@ div[class*="st-key-dnav_item_"] button {
     cursor: pointer !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button p,
-div.st-key-duckshow_navbar_container button p,
 div[class*="st-key-dnav_item_"] div.stButton > button p,
 div[class*="st-key-dnav_item_"] button p {
     color: inherit !important;
@@ -2760,8 +2761,6 @@ div[class*="st-key-dnav_item_"] button p {
     letter-spacing: inherit !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button:hover,
-div.st-key-duckshow_navbar_container button:hover,
 div[class*="st-key-dnav_item_"] div.stButton > button:hover,
 div[class*="st-key-dnav_item_"] button:hover {
     color: #FFFFFF !important;
@@ -2773,15 +2772,11 @@ div[class*="st-key-dnav_item_"] button:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45) !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button:hover p,
-div.st-key-duckshow_navbar_container button:hover p,
 div[class*="st-key-dnav_item_"] div.stButton > button:hover p,
 div[class*="st-key-dnav_item_"] button:hover p {
     color: #FFFFFF !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button[kind="primary"],
-div.st-key-duckshow_navbar_container button[kind="primary"],
 div[class*="st-key-dnav_item_"] div.stButton > button[kind="primary"],
 div[class*="st-key-dnav_item_"] button[kind="primary"] {
     color: #FFFFFF !important;
@@ -2794,41 +2789,84 @@ div[class*="st-key-dnav_item_"] button[kind="primary"] {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
 }
 
-div.st-key-duckshow_navbar_container div.stButton > button[kind="primary"] p,
-div.st-key-duckshow_navbar_container button[kind="primary"] p,
 div[class*="st-key-dnav_item_"] div.stButton > button[kind="primary"] p,
 div[class*="st-key-dnav_item_"] button[kind="primary"] p {
     color: #FFFFFF !important;
     font-weight: 800 !important;
 }
 
-/* Compact Search Icon Popover Button */
-div.st-key-duckshow_navbar_container div[data-testid="stPopover"],
-div.st-key-duckshow_navbar_container div[data-testid="stPopover"] > button {
+/* Sleek Minimalist Navbar Search Button (Non-bold, no chunky pill, no caret) */
+div.st-key-duckshow_navbar_container [data-testid="stPopover"],
+div.st-key-duckshow_navbar_container [data-testid="stPopover"] button,
+div[class*="st-key-nav_search_popover"],
+div[class*="st-key-nav_search_popover"] button {
     background: transparent !important;
     background-color: transparent !important;
     background-image: none !important;
     border: none !important;
+    outline: none !important;
     box-shadow: none !important;
-    color: #C0C0D0 !important;
+    color: #C5C5D2 !important;
     font-size: 1.15rem !important;
-    padding: 2px 4px !important;
-    min-height: 36px !important;
-    height: 36px !important;
-    width: 36px !important;
-    min-width: 36px !important;
-    display: flex !important;
+    font-weight: 400 !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-div.st-key-duckshow_navbar_container div[data-testid="stPopover"] > button:hover {
+div.st-key-duckshow_navbar_container [data-testid="stPopover"] button:hover,
+div[class*="st-key-nav_search_popover"] button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
     color: #FFFFFF !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-radius: 8px !important;
-    transform: translateY(-1px) !important;
+    transform: scale(1.1) !important;
+}
+
+div.st-key-duckshow_navbar_container [data-testid="stPopover"] button p,
+div[class*="st-key-nav_search_popover"] button p {
+    font-size: 1.1rem !important;
+    font-weight: 400 !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: inherit !important;
+}
+
+/* Completely remove downward caret / chevron in search popover */
+div.st-key-duckshow_navbar_container [data-testid="stPopover"] button svg,
+div.st-key-duckshow_navbar_container [data-testid="stPopover"] button [data-testid="stIconMaterial"],
+div.st-key-duckshow_navbar_container [data-testid="stPopover"] button span:has(svg),
+div.st-key-duckshow_navbar_container [data-testid="stPopover"] button span:last-child:not(:first-child),
+div[class*="st-key-nav_search_popover"] button svg,
+div[class*="st-key-nav_search_popover"] button [data-testid="stIconMaterial"],
+div[class*="st-key-nav_search_popover"] button span:last-child:not(:first-child) {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Glassmorphism popover dropdown panel */
+div[data-testid="stPopoverBody"] {
+    background: rgba(18, 18, 24, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(139, 44, 245, 0.3) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.8), 0 0 20px rgba(139, 44, 245, 0.2) !important;
+    padding: 12px !important;
 }
 
 /* Cineverse Movie Card & Top Pick "▶ Watch" Demo Button */
