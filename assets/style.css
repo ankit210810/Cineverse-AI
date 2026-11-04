@@ -406,43 +406,56 @@ div[data-testid="stCustomComponentV1"] {
     box-shadow: 0 0 6px rgba(229, 9, 20, 0.8);
 }
 
-/* Right-side Netflix-style Red Smiley Avatar Button matching reference */
-div.st-key-dnav_user_ak_btn div.stButton > button,
-div.st-key-dnav_user_ak_btn button {
-    background: #E50914 !important;
-    border: 1px solid rgba(255, 255, 255, 0.18) !important;
-    color: #FFFFFF !important;
-    border-radius: 5px !important;
+/* Right-side Netflix-style Red Smiley Avatar Profile Lockup matching reference */
+.duckshow-profile-lockup {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    padding: 2px 6px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.duckshow-profile-lockup:hover {
+    transform: scale(1.05) !important;
+}
+
+.netflix-avatar-card {
     width: 32px !important;
     height: 32px !important;
-    min-width: 32px !important;
-    min-height: 32px !important;
-    max-width: 32px !important;
-    max-height: 32px !important;
-    padding: 0 !important;
-    display: flex !important;
+    background: #E50914 !important;
+    border-radius: 5px !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 1.05rem !important;
-    line-height: 1 !important;
-    cursor: pointer !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
-    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 10px rgba(229, 9, 20, 0.4) !important;
+    flex-shrink: 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
 }
 
-div.st-key-dnav_user_ak_btn div.stButton > button p,
-div.st-key-dnav_user_ak_btn button p {
+.netflix-avatar-svg {
+    display: block !important;
+}
+
+.duckshow-profile-initials {
     color: #FFFFFF !important;
-    font-size: 1.05rem !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    font-size: 0.92rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
     line-height: 1 !important;
 }
 
-div.st-key-dnav_user_ak_btn div.stButton > button:hover,
-div.st-key-dnav_user_ak_btn button:hover {
-    transform: scale(1.08) !important;
-    box-shadow: 0 0 14px rgba(229, 9, 20, 0.7) !important;
+.duckshow-profile-caret {
+    color: #A0A5BA !important;
+    font-size: 0.78rem !important;
+    margin-left: -2px !important;
+    transition: color 0.18s ease !important;
+}
+
+.duckshow-profile-lockup:hover .duckshow-profile-caret {
+    color: #FFFFFF !important;
 }
 section[data-testid="stSidebar"] .stMarkdown {
     color: var(--text-secondary);
