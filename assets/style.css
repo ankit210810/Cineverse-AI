@@ -822,65 +822,371 @@ div.stButton > button[kind="primary"]:hover {
     }
 }
 
-/* Custom Neon-Yellow Animated Cursor */
+/* Custom Neon-Yellow Animated Cursor matching video */
 #cineverse-cursor-dot {
     position: fixed;
     top: 0;
     left: 0;
-    width: 8px;
-    height: 8px;
-    background-color: #090A12;
-    border: 2px solid #FFEE00;
+    width: 22px;
+    height: 22px;
+    background-color: #FFD500;
     border-radius: 50%;
     pointer-events: none !important;
-    z-index: 999999999;
+    z-index: 2147483647;
+    mix-blend-mode: difference;
     transform: translate(-50%, -50%);
-    transition: width 0.15s ease, height 0.15s ease, background-color 0.15s ease;
+    box-shadow: 0 0 10px rgba(255, 213, 0, 0.6);
+    transition: width 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                opacity 0.15s ease;
     opacity: 0;
-}
-
-#cineverse-cursor-ring {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 32px;
-    height: 32px;
-    border: 2px solid #FFEE00;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(255, 238, 0, 0.8), 0 0 20px rgba(255, 238, 0, 0.4);
-    background: transparent;
-    pointer-events: none !important;
-    z-index: 999999998;
-    transform: translate(-50%, -50%);
-    transition: width 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
-                height 0.22s cubic-bezier(0.2, 0.8, 0.2, 1),
-                border-color 0.2s ease,
-                box-shadow 0.2s ease,
-                background-color 0.2s ease;
-    opacity: 0;
-}
-
-body.cursor-hover-interactive #cineverse-cursor-ring {
-    width: 48px;
-    height: 48px;
-    border-color: #40D9E8;
-    box-shadow: 0 0 18px rgba(64, 217, 232, 0.8), 0 0 32px rgba(183, 123, 255, 0.5);
-    background-color: rgba(64, 217, 232, 0.08);
 }
 
 body.cursor-hover-interactive #cineverse-cursor-dot {
-    border-color: #40D9E8;
-    background-color: #B77BFF;
-}
-
-body.cursor-clicking #cineverse-cursor-ring {
-    transform: translate(-50%, -50%) scale(0.7);
-    border-color: #B77BFF;
-    box-shadow: 0 0 24px rgba(183, 123, 255, 0.95);
+    width: 38px;
+    height: 38px;
+    background-color: #FFEE00;
+    box-shadow: 0 0 18px rgba(255, 238, 0, 0.85);
 }
 
 body.cursor-clicking #cineverse-cursor-dot {
-    transform: translate(-50%, -50%) scale(1.3);
+    width: 16px;
+    height: 16px;
+    box-shadow: 0 0 24px rgba(255, 213, 0, 1);
+}
+
+/* ==============================================================================
+   NETFLIX / DUCKSHOW HORIZONTAL MOVIE CAROUSEL ROW WITH PROGRESS TRACK
+   ============================================================================== */
+.carousel-section-container {
+    margin-top: 32px;
+    margin-bottom: 24px;
+    position: relative;
+    width: 100%;
+}
+
+.carousel-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding: 0 4px;
+}
+
+.carousel-section-title {
+    font-size: 1.28rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.carousel-title-highlight {
+    color: #FFD500;
+    font-weight: 900;
+}
+
+.carousel-view-all {
+    color: #FFD500;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.carousel-view-all:hover {
+    color: #FFE600;
+    transform: translateX(3px);
+}
+
+.movie-carousel-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.movie-carousel-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding: 10px 4px 16px 4px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    user-select: none;
+}
+
+.movie-carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+.movie-carousel-track.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+}
+
+/* Individual Movie Card */
+.carousel-card {
+    flex: 0 0 205px;
+    width: 205px;
+    height: 310px;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    background-color: #12101E;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+                box-shadow 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.carousel-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85), 0 0 24px rgba(255, 213, 0, 0.25);
+    z-index: 10;
+}
+
+.card-poster-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: transform 0.4s ease;
+}
+
+.carousel-card:hover .card-poster-bg {
+    transform: scale(1.08);
+}
+
+.card-glass-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(7, 5, 16, 0.95) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px;
+    transition: background 0.25s ease;
+}
+
+.carousel-card:hover .card-glass-overlay {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.5) 45%, rgba(7, 5, 16, 0.98) 100%);
+}
+
+/* Top-right Plus Button (Watchlist) */
+.card-top-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card-btn-plus {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(14, 10, 28, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    transform: scale(0.85);
+}
+
+.carousel-card:hover .card-btn-plus {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.card-btn-plus:hover {
+    background: #FFD500;
+    color: #070510;
+    border-color: #FFD500;
+    box-shadow: 0 0 14px rgba(255, 213, 0, 0.8);
+}
+
+/* Center Glowing Yellow Play Button matching video */
+.card-center-play-wrap {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.75);
+    opacity: 0;
+    transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.carousel-card:hover .card-center-play-wrap {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto;
+}
+
+.card-btn-play {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #FFD500;
+    color: #070510;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 0 24px rgba(255, 213, 0, 0.85), 0 4px 12px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-btn-play:hover {
+    transform: scale(1.12);
+    background: #FFE600;
+    box-shadow: 0 0 32px rgba(255, 213, 0, 1), 0 6px 16px rgba(0, 0, 0, 0.7);
+}
+
+.card-play-triangle {
+    font-size: 1.3rem;
+    line-height: 1;
+    margin-left: 3px;
+    color: #070510;
+}
+
+/* Bottom Card Details */
+.card-bottom-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 3;
+}
+
+.card-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+.card-tag {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #E2E2EA;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.card-title-link {
+    text-decoration: none !important;
+}
+
+.card-movie-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+
+.card-movie-sub {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #A0A0BA;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Floating Navigation Arrows */
+.carousel-arrow {
+    position: absolute;
+    top: calc(50% - 20px);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(10, 10, 16, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 12;
+    opacity: 0;
+    transition: all 0.22s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.movie-carousel-wrapper:hover .carousel-arrow {
+    opacity: 0.9;
+}
+
+.carousel-arrow:hover {
+    opacity: 1 !important;
+    background: #FFD500;
+    color: #070510;
+    border-color: #FFD500;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 213, 0, 0.8);
+}
+
+.carousel-arrow-prev {
+    left: -12px;
+}
+
+.carousel-arrow-next {
+    right: -12px;
+}
+
+/* Yellow Progress Indicator Bar Under Cards matching video */
+.carousel-progress-track {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    margin-top: 14px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-progress-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 25%;
+    background: #FFD500;
+    border-radius: 9999px;
+    box-shadow: 0 0 10px rgba(255, 213, 0, 0.7);
+    transition: left 0.08s ease-out, width 0.15s ease-out;
 }
 
 /* Strictly disable custom cursor on touch and reduced-motion */

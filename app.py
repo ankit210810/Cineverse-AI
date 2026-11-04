@@ -138,6 +138,20 @@ if supabase_user:
     current_user["display_name"] = supabase_user.user_metadata.get("display_name") or supabase_user.email.split("@")[0]
     current_user["username"] = supabase_user.email
 
+# Direct Watchlist Toggle Trigger
+if "toggle_wl" in st.query_params:
+    try:
+        twl_mid = int(st.query_params.get("toggle_wl", 0))
+        from services.user_service import is_in_watchlist, add_to_watchlist, remove_from_watchlist
+        uid = current_user.get("user_id", 42)
+        if is_in_watchlist(uid, twl_mid):
+            remove_from_watchlist(uid, twl_mid)
+        else:
+            add_to_watchlist(uid, twl_mid)
+    except Exception:
+        pass
+    st.query_params.clear()
+
 registry = get_model_registry()
 
 # -------------------------------------------------------------
