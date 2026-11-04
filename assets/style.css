@@ -83,7 +83,20 @@ div[data-testid="stToolbar"],
 div[data-testid="stDecoration"],
 div[data-testid="stStatusWidget"],
 #MainMenu,
-footer {
+footer,
+div[class*="viewerBadge"],
+a[class*="viewerBadge"],
+div[class*="ViewerBadge"],
+a[class*="ViewerBadge"],
+div[id*="manage-app"],
+button[id*="manage-app"],
+div[class*="manageApp"],
+div[class*="manage-app"],
+[data-testid="manage-app-button"],
+div[class*="StatusWidget"],
+div[class*="floatingBadge"],
+div[class*="ProfileBadge"],
+div[class*="profileBadge"] {
     display: none !important;
     height: 0 !important;
     max-height: 0 !important;
@@ -94,6 +107,7 @@ footer {
     overflow: hidden !important;
     pointer-events: none !important;
     opacity: 0 !important;
+    width: 0 !important;
 }
 
 /* Complete removal of Streamlit default multipage navigation & Sidebar */
@@ -2545,8 +2559,8 @@ div.st-key-cineverse_floating_ai_btn,
 div.st-key-cineverse_floating_ai_btn > div,
 div[data-testid="stElementContainer"]:has(div.st-key-cineverse_floating_ai_btn) {
     position: fixed !important;
-    bottom: 28px !important;
-    right: 28px !important;
+    bottom: 34px !important;
+    right: 34px !important;
     z-index: 999999 !important;
     width: auto !important;
     pointer-events: auto !important;

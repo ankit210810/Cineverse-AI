@@ -30,6 +30,28 @@
         pDoc.head.appendChild(styleEl);
       }
       styleEl.textContent = `
+        /* Suppress Streamlit Community Cloud host watermark & viewer badges */
+        div[class*="viewerBadge"],
+        a[class*="viewerBadge"],
+        div[class*="ViewerBadge"],
+        a[class*="ViewerBadge"],
+        #manage-app-button,
+        [data-testid="manage-app-button"],
+        div[class*="manageApp"],
+        div[class*="manage-app"],
+        div[class*="ProfileBadge"],
+        div[class*="floatingBadge"],
+        footer {
+          display: none !important;
+          visibility: hidden !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          max-height: 0 !important;
+          overflow: hidden !important;
+        }
+
         /* Hide default OS cursor on desktop pointer devices EXCEPT on text inputs */
         @media (pointer: fine) and (hover: hover) {
           body, html, *, *::before, *::after {
@@ -330,6 +352,34 @@
 
             initMovieCarousels();
             setInterval(initMovieCarousels, 600);
+
+            // Suppress Streamlit Cloud host badges & watermarks
+            function stripStreamlitHostBadges() {
+              try {
+                const sels = [
+                  'div[class*="viewerBadge"]',
+                  'a[class*="viewerBadge"]',
+                  'div[class*="ViewerBadge"]',
+                  'a[class*="ViewerBadge"]',
+                  '#manage-app-button',
+                  '[data-testid="manage-app-button"]',
+                  'div[class*="manageApp"]',
+                  'div[class*="manage-app"]',
+                  'div[class*="ProfileBadge"]',
+                  'div[class*="floatingBadge"]'
+                ];
+                sels.forEach(sel => {
+                  pDoc.querySelectorAll(sel).forEach(el => {
+                    el.style.setProperty('display', 'none', 'important');
+                    el.style.setProperty('visibility', 'hidden', 'important');
+                    el.style.setProperty('opacity', '0', 'important');
+                    el.style.setProperty('pointer-events', 'none', 'important');
+                  });
+                });
+              } catch (e) {}
+            }
+            stripStreamlitHostBadges();
+            setInterval(stripStreamlitHostBadges, 800);
           })();
         `;
         pDoc.head.appendChild(scriptEl);
