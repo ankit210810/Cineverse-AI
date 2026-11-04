@@ -1,0 +1,30 @@
+# Cineverse AI - Git Ignore Rules
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Environment Variables & Secrets (CRITICAL SECURITY)
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+!.streamlit/secrets.toml.example
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Data, temporary files & logs
+*.log
+scratch/
+.system_generated/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+desktop.ini

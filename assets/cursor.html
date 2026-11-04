@@ -1,0 +1,188 @@
+<script>
+(function() {
+  function initCineverseCursor() {
+    try {
+      let doc = document;
+      let win = window;
+      try {
+        if (window.parent && window.parent.document) {
+          doc = window.parent.document;
+          win = window.parent.window;
+        }
+      } catch (e) {
+        doc = document;
+        win = window;
+      }
+
+      // CRITICAL: Idempotent guard to prevent duplicate loops and memory leaks on Streamlit reruns
+      if (win.__cineverse_cursor_active) {
+        return;
+      }
+      win.__cineverse_cursor_active = true;
+
+      // Check for touch / mobile devices or reduced motion
+      if (win.matchMedia && (
+          win.matchMedia('(pointer: coarse)').matches || 
+          win.matchMedia('(hover: none)').matches || 
+          win.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+        return;
+      }
+
+      // Inject cursor styles once
+      if (!doc.getElementById('cineverse-cursor-styles')) {
+        const styleEl = doc.createElement('style');
+        styleEl.id = 'cineverse-cursor-styles';
+        styleEl.textContent = `
+          @media (pointer: fine) and (hover: hover) {
+            button, a, [role="button"], .stButton > button, div[data-baseweb="select"], input {
+              cursor: pointer !important;
+            }
+          }
+          #cineverse-cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 7px;
+            height: 7px;
+            background-color: #FFD500;
+            border-radius: 50%;
+            pointer-events: none !important;
+            z-index: 2147483647;
+            will-change: transform;
+            transform: translate3d(-100px, -100px, 0);
+            box-shadow: 0 0 10px rgba(255, 213, 0, 0.9);
+            transition: opacity 0.2s ease;
+            opacity: 0;
+          }
+          #cineverse-cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 32px;
+            height: 32px;
+            border: 2px solid #FFD500;
+            border-radius: 50%;
+            box-shadow: 0 0 16px rgba(255, 213, 0, 0.8), 0 0 28px rgba(255, 213, 0, 0.35);
+            background: transparent;
+            pointer-events: none !important;
+            z-index: 2147483646;
+            will-change: transform;
+            transform: translate3d(-100px, -100px, 0);
+            transition: width 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        height 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        border-color 0.2s ease,
+                        box-shadow 0.2s ease,
+                        opacity 0.2s ease;
+            opacity: 0;
+          }
+          body.cursor-hover-interactive #cineverse-cursor-ring {
+            width: 44px;
+            height: 44px;
+            border-color: #8B2CF5;
+            box-shadow: 0 0 22px rgba(139, 44, 245, 0.9), 0 0 35px rgba(192, 38, 255, 0.45);
+            background: rgba(139, 44, 245, 0.1);
+          }
+          body.cursor-hover-interactive #cineverse-cursor-dot {
+            background-color: #C026FF;
+            box-shadow: 0 0 12px #C026FF;
+          }
+          body.cursor-clicking #cineverse-cursor-ring {
+            transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0) scale(0.75);
+            border-color: #FFD500;
+            box-shadow: 0 0 24px rgba(255, 213, 0, 0.95);
+          }
+        `;
+        doc.head.appendChild(styleEl);
+      }
+
+      // Locate or create elements
+      let dot = doc.getElementById('cineverse-cursor-dot');
+      let ring = doc.getElementById('cineverse-cursor-ring');
+
+      if (!dot) {
+        dot = doc.createElement('div');
+        dot.id = 'cineverse-cursor-dot';
+        doc.body.appendChild(dot);
+      }
+      if (!ring) {
+        ring = doc.createElement('div');
+        ring.id = 'cineverse-cursor-ring';
+        doc.body.appendChild(ring);
+      }
+
+      let mouseX = -100;
+      let mouseY = -100;
+      let ringX = -100;
+      let ringY = -100;
+      let isVisible = false;
+      let lastHoverCheck = 0;
+
+      function handleMouseMove(e) {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!isVisible) {
+          isVisible = true;
+          dot.style.opacity = '1';
+          ring.style.opacity = '1';
+        }
+
+        // Hardware-accelerated GPU translate for instant 120 FPS tracking
+        dot.style.transform = 'translate3d(' + (mouseX - 3.5) + 'px, ' + (mouseY - 3.5) + 'px, 0)';
+
+        // Throttle interactive hover checks to 50ms to eliminate CPU lag
+        const now = Date.now();
+        if (now - lastHoverCheck > 50) {
+          lastHoverCheck = now;
+          const target = e.target;
+          if (target && target.closest) {
+            const isInteractive = target.closest('button, a, input, [role="button"], .stButton, .cineverse-brand-lockup');
+            if (isInteractive) {
+              doc.body.classList.add('cursor-hover-interactive');
+            } else {
+              doc.body.classList.remove('cursor-hover-interactive');
+            }
+          }
+        }
+      }
+
+      // Attach single passive listener
+      win.addEventListener('mousemove', handleMouseMove, { passive: true });
+
+      win.addEventListener('mousedown', function() {
+        doc.body.classList.add('cursor-clicking');
+      }, { passive: true });
+
+      win.addEventListener('mouseup', function() {
+        doc.body.classList.remove('cursor-clicking');
+      }, { passive: true });
+
+      win.addEventListener('mouseleave', function() {
+        isVisible = false;
+        dot.style.opacity = '0';
+        ring.style.opacity = '0';
+      }, { passive: true });
+
+      // Ultra-efficient GPU animation loop for ring inertia
+      function renderFrame() {
+        if (isVisible) {
+          ringX += (mouseX - ringX) * 0.24;
+          ringY += (mouseY - ringY) * 0.24;
+          ring.style.transform = 'translate3d(' + (ringX - 16) + 'px, ' + (ringY - 16) + 'px, 0)';
+        }
+        win.requestAnimationFrame(renderFrame);
+      }
+      win.requestAnimationFrame(renderFrame);
+
+    } catch (err) {
+      console.debug('Cineverse cursor:', err);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCineverseCursor);
+  } else {
+    initCineverseCursor();
+  }
+})();
+</script>
