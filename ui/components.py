@@ -179,7 +179,7 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
                         st.rerun()
 
         with col_right:
-            c_search, c_bell, c_avatar = st.columns([0.8, 0.8, 1.6], vertical_alignment="center")
+            c_search, c_bell, c_avatar = st.columns([1.0, 0.9, 1.1], vertical_alignment="center")
             with c_search:
                 with st.popover("🔍", help="Search movies, genres & moods"):
                     search_query = st.text_input(
@@ -204,15 +204,9 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
             with c_avatar:
                 render_html(f"""
                     <a href="?nav=profile" target="_self" class="duckshow-profile-lockup" title="Profile: {display_name} (Administrator)">
-                        <div class="netflix-avatar-card">
-                            <svg class="netflix-avatar-svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
-                                <rect x="5" y="7" width="3.2" height="3.2" rx="0.8" fill="#FFFFFF"/>
-                                <rect x="15.8" y="7" width="3.2" height="3.2" rx="0.8" fill="#FFFFFF"/>
-                                <path d="M6 14.5C8 17.5 16 17.5 18 14.5" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/>
-                            </svg>
+                        <div class="user-avatar-pfp">
+                            <span class="user-avatar-text">AK</span>
                         </div>
-                        <span class="duckshow-profile-initials">AK</span>
-                        <span class="duckshow-profile-caret">▾</span>
                     </a>
                 """)
 
