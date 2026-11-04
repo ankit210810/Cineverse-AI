@@ -29,7 +29,7 @@ from services.movie_service import (
     get_movies_by_ids
 )
 from services.history_service import get_continue_watching
-from services.recommendation_service import get_recommendation_service
+from services.recommendation_service import get_cached_recommendations
 from services.user_service import get_user_taste_profile
 
 
@@ -132,8 +132,7 @@ def render_home_page(user: dict):
     with st.expander("🤖 Live Recommendation Engine Output (Deep Dive)", expanded=False):
         algo = st.session_state.get("selected_algorithm", "Automatic Best Model")
         st.caption(f"Active Algorithm: **{algo}**")
-        rec_service = get_recommendation_service()
-        recs_res = rec_service.get_recommendations(user_id=user_id, algorithm=algo, limit=4)
+        recs_res = get_cached_recommendations(user_id=user_id, algorithm=algo, limit=4)
 
         if recs_res.get("fallback_used"):
             render_html(f"""

@@ -88,3 +88,12 @@ ON watch_history(movie_id);
 
 CREATE INDEX IF NOT EXISTS idx_ratings_user
 ON ratings(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_ratings_movie
+ON ratings(movie_id);
+
+CREATE INDEX IF NOT EXISTS idx_movies_year
+ON movies(release_year);
+
+CREATE INDEX IF NOT EXISTS idx_watchlist_user
+ON watchlist(user_id);

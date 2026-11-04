@@ -6,6 +6,7 @@ top-rated and trending catalogs, and content-similarity matching.
 
 import math
 from typing import Dict, List, Optional, Any, Tuple
+import streamlit as st
 from database.db import get_db_connection
 
 # Comprehensive mood mapping based on cinematic emotional tones
@@ -53,6 +54,7 @@ MOOD_GENRE_MAP: Dict[str, Dict[str, Any]] = {
 }
 
 
+@st.cache_data(ttl=600, show_spinner=False)
 def get_movie(movie_id: int) -> Optional[Dict[str, Any]]:
     """Retrieve movie details along with aggregate rating metrics."""
     conn = get_db_connection()
@@ -231,6 +233,7 @@ def search_movies(
         conn.close()
 
 
+@st.cache_data(ttl=300, show_spinner=False)
 def get_trending_movies(limit: int = 12) -> List[Dict[str, Any]]:
     """Return top trending movies using Bayesian weighted ranking."""
     conn = get_db_connection()
@@ -269,6 +272,7 @@ def get_trending_movies(limit: int = 12) -> List[Dict[str, Any]]:
         conn.close()
 
 
+@st.cache_data(ttl=600, show_spinner=False)
 def get_top_rated_movies(limit: int = 12, min_ratings: int = 40) -> List[Dict[str, Any]]:
     """Return top-rated movies meeting a minimum rating threshold."""
     conn = get_db_connection()
@@ -300,6 +304,7 @@ def get_top_rated_movies(limit: int = 12, min_ratings: int = 40) -> List[Dict[st
         conn.close()
 
 
+@st.cache_data(ttl=600, show_spinner=False)
 def get_mood_movies(mood: str, limit: int = 12) -> List[Dict[str, Any]]:
     """Return top curated movies matching a specific emotional mood."""
     mood_info = MOOD_GENRE_MAP.get(mood)
@@ -346,6 +351,7 @@ def get_mood_movies(mood: str, limit: int = 12) -> List[Dict[str, Any]]:
         conn.close()
 
 
+@st.cache_data(ttl=600, show_spinner=False)
 def get_similar_movies(movie_id: int, limit: int = 6) -> List[Dict[str, Any]]:
     """Compute content-based genre overlap to recommend similar titles."""
     target = get_movie(movie_id)

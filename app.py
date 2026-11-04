@@ -28,12 +28,6 @@ if STYLE_PATH.exists():
     with open(STYLE_PATH, "r", encoding="utf-8") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Force-reload dynamic UI modules so Streamlit doesn't cache stale modules in sys.modules
-import importlib
-for mod_name in ["ui.components", "ui.movie_carousel", "ui.hero_slider"]:
-    if mod_name in sys.modules:
-        importlib.reload(sys.modules[mod_name])
-
 # Import services & components
 from services.user_service import get_user, ensure_admin_user
 from services.model_service import get_model_registry

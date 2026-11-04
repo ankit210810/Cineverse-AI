@@ -4,6 +4,7 @@ Handles user retrieval, creation, taste profile generation, and activity stats.
 """
 
 from typing import Dict, List, Optional, Any
+import streamlit as st
 from database.db import get_db_connection
 
 
@@ -100,6 +101,7 @@ def create_user(username: str, display_name: Optional[str] = None) -> Dict[str, 
         conn.close()
 
 
+@st.cache_data(ttl=3600, show_spinner=False)
 def ensure_admin_user(email: str = "ankitkumar2009ara@gmail.com", display_name: str = "Ankit Kumar") -> Dict[str, Any]:
     """Ensures the primary admin user exists in the database with administrator privileges."""
     conn = get_db_connection()

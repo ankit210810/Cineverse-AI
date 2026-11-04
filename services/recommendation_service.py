@@ -294,3 +294,12 @@ def get_recommendation_service() -> RecommendationService:
     if _recommender is None:
         _recommender = RecommendationService()
     return _recommender
+
+
+import streamlit as st
+
+@st.cache_data(ttl=300, show_spinner=False)
+def get_cached_recommendations(user_id: int, algorithm: str = "Automatic Best Model", limit: int = 10) -> Dict[str, Any]:
+    """Caches recommendation engine predictions for ultra-fast instant rendering."""
+    svc = get_recommendation_service()
+    return svc.get_recommendations(user_id=user_id, algorithm=algorithm, limit=limit)
