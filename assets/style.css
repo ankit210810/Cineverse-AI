@@ -445,6 +445,14 @@ div[data-testid="stCustomComponentV1"] {
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.4) !important;
 }
 
+.user-avatar-img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+
 .duckshow-profile-lockup:hover .user-avatar-pfp {
     transform: scale(1.1) !important;
     border-color: #FFD500 !important;

@@ -139,6 +139,9 @@ supabase_user = st.session_state.get("supabase_user")
 if supabase_user:
     current_user["display_name"] = supabase_user.user_metadata.get("display_name") or supabase_user.email.split("@")[0]
     current_user["username"] = supabase_user.email
+    meta_avatar = supabase_user.user_metadata.get("avatar_url") or supabase_user.user_metadata.get("picture")
+    if meta_avatar:
+        current_user["avatar_url"] = meta_avatar
 
 # Direct Watchlist Toggle Trigger
 if "toggle_wl" in st.query_params:

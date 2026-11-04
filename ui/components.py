@@ -129,16 +129,28 @@ def render_top_bar(current_user: Dict[str, Any]):
 def render_duckshow_navbar(current_user: Dict[str, Any]):
     """Renders the transparent horizontal streaming navbar matching the user's reference."""
     current_sel = st.session_state.get("nav_selection", "🏠 Home")
-    display_name = current_user.get("display_name") or "Ankit Kumar"
+    display_name = current_user.get("display_name") or current_user.get("username") or "Ankit Kumar"
 
-    # User initials (AK)
-    initials = "AK"
+    # Compute initials dynamically for any logged-in user (e.g. Sonu Kumar -> SK, Ankit Kumar -> AK)
+    initials = "U"
     if display_name:
         parts = display_name.strip().split()
         if len(parts) >= 2:
-            initials = f"{parts[0][0]}{parts[1][0]}".upper()
+            initials = f"{parts[0][0]}{parts[-1][0]}".upper()
         elif len(parts) == 1:
             initials = parts[0][:2].upper()
+
+    # Dynamic vibrant gradient per user name
+    gradient_presets = [
+        "linear-gradient(135deg, #1C1535 0%, #2A1E50 50%, #3D2670 100%)",
+        "linear-gradient(135deg, #0F172A 0%, #1E3A8A 50%, #3B82F6 100%)",
+        "linear-gradient(135deg, #1E1B4B 0%, #4338CA 50%, #6366F1 100%)",
+        "linear-gradient(135deg, #2E1065 0%, #6B21A8 50%, #A855F7 100%)",
+        "linear-gradient(135deg, #3B0764 0%, #701A75 50%, #C026D3 100%)",
+        "linear-gradient(135deg, #142A27 0%, #0F766E 50%, #14B8A6 100%)",
+    ]
+    user_bg_gradient = gradient_presets[abs(hash(display_name)) % len(gradient_presets)]
+    avatar_url = current_user.get("avatar_url") or current_user.get("picture")
 
     is_admin = current_user.get("user_type") == "admin" or current_user.get("is_admin", True) or st.session_state.get("is_admin", True)
 
@@ -202,10 +214,16 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
                     </div>
                 """)
             with c_avatar:
+                role_label = "Administrator" if is_admin else "Member"
+                if avatar_url:
+                    avatar_content = f'<img src="{avatar_url}" alt="{display_name}" class="user-avatar-img" />'
+                else:
+                    avatar_content = f'<span class="user-avatar-text">{initials}</span>'
+
                 render_html(f"""
-                    <a href="?nav=profile" target="_self" class="duckshow-profile-lockup" title="Profile: {display_name} (Administrator)">
-                        <div class="user-avatar-pfp">
-                            <span class="user-avatar-text">AK</span>
+                    <a href="?nav=profile" target="_self" class="duckshow-profile-lockup" title="Profile: {display_name} ({role_label})">
+                        <div class="user-avatar-pfp" style="background: {user_bg_gradient};">
+                            {avatar_content}
                         </div>
                     </a>
                 """)
