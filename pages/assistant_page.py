@@ -217,11 +217,11 @@ def render_assistant_page(user: dict):
                         </button>
                     </div>
                     <script>
-                        window.addEventListener('mousemove', (e) => {
-                            try {
-                                window.parent.postMessage({ type: 'cineverse_mouse_move', x: e.clientX, y: e.clientY }, '*');
-                            } catch(err) {}
-                        }, { passive: true });
+                        window.addEventListener('mousemove', (e) => {{
+                            try {{
+                                window.parent.postMessage({{ type: 'cineverse_mouse_move', x: e.clientX, y: e.clientY }}, '*');
+                            }} catch(err) {{}}
+                        }}, {{ passive: true }});
                     </script>
                 """, height=30)
 
