@@ -28,10 +28,6 @@ if STYLE_PATH.exists():
     with open(STYLE_PATH, "r", encoding="utf-8") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-if CURSOR_PATH.exists():
-    with open(CURSOR_PATH, "r", encoding="utf-8") as f:
-        st.components.v1.html(f.read(), height=0)
-
 # Import services & components
 from services.user_service import get_user, ensure_admin_user
 from services.model_service import get_model_registry

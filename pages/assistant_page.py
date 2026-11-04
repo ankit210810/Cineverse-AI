@@ -144,6 +144,12 @@ def render_assistant_page(user: dict):
                         micLabel.innerText = 'Speak Prompt';
                     };
                 }
+
+                window.addEventListener('mousemove', (e) => {
+                    try {
+                        window.parent.postMessage({ type: 'cineverse_mouse_move', x: e.clientX, y: e.clientY }, '*');
+                    } catch(err) {}
+                }, { passive: true });
             </script>
         """, height=44)
 
@@ -210,6 +216,13 @@ def render_assistant_page(user: dict):
                             ⏹️ Stop
                         </button>
                     </div>
+                    <script>
+                        window.addEventListener('mousemove', (e) => {
+                            try {
+                                window.parent.postMessage({ type: 'cineverse_mouse_move', x: e.clientX, y: e.clientY }, '*');
+                            } catch(err) {}
+                        }, { passive: true });
+                    </script>
                 """, height=30)
 
             if msg.get("movies"):

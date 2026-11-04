@@ -2,275 +2,338 @@
 (function() {
   function initCineverseClient() {
     try {
-      let doc = document;
-      let win = window;
+      let pDoc = document;
+      let pWin = window;
       try {
         if (window.parent && window.parent.document) {
-          doc = window.parent.document;
-          win = window.parent.window;
+          pDoc = window.parent.document;
+          pWin = window.parent.window;
         }
       } catch (e) {
-        doc = document;
-        win = window;
+        pDoc = document;
+        pWin = window;
       }
 
       // Check for touch / mobile devices or reduced motion
-      const isTouch = win.matchMedia && (
-        win.matchMedia('(pointer: coarse)').matches || 
-        win.matchMedia('(hover: none)').matches
+      const isTouch = pWin.matchMedia && (
+        pWin.matchMedia('(pointer: coarse)').matches || 
+        pWin.matchMedia('(hover: none)').matches
       );
 
       // -------------------------------------------------------------
-      // 1. INJECT GLOBAL CURSOR & CAROUSEL STYLES
+      // 1. INJECT GLOBAL CURSOR & CAROUSEL STYLES INTO PARENT HEAD
       // -------------------------------------------------------------
-      if (!doc.getElementById('cineverse-client-styles')) {
-        const styleEl = doc.createElement('style');
+      let styleEl = pDoc.getElementById('cineverse-client-styles');
+      if (!styleEl) {
+        styleEl = pDoc.createElement('style');
         styleEl.id = 'cineverse-client-styles';
-        styleEl.textContent = `
-          /* Hide default OS cursor on desktop pointer devices */
-          @media (pointer: fine) and (hover: hover) {
-            body, html, *, *::before, *::after {
-              cursor: none !important;
-            }
-          }
-
-          /* Solid Vibrant Glowing Yellow Circular Dot Cursor matching video */
-          #cineverse-cursor-dot {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 22px;
-            height: 22px;
-            background-color: #FFD500;
-            border-radius: 50%;
-            pointer-events: none !important;
-            z-index: 2147483647;
-            mix-blend-mode: difference;
-            will-change: transform, width, height;
-            transform: translate3d(-100px, -100px, 0);
-            box-shadow: 0 0 10px rgba(255, 213, 0, 0.6);
-            transition: width 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
-                        opacity 0.15s ease;
-            opacity: 0;
-          }
-
-          body.cursor-hover-interactive #cineverse-cursor-dot {
-            width: 38px;
-            height: 38px;
-            background-color: #FFEE00;
-            box-shadow: 0 0 18px rgba(255, 238, 0, 0.85);
-          }
-
-          body.cursor-clicking #cineverse-cursor-dot {
-            width: 16px;
-            height: 16px;
-            box-shadow: 0 0 24px rgba(255, 213, 0, 1);
-          }
-
-          @media (pointer: coarse), (hover: none), (prefers-reduced-motion: reduce) {
-            #cineverse-cursor-dot {
-              display: none !important;
-              opacity: 0 !important;
-              visibility: hidden !important;
-            }
-          }
-        `;
-        doc.head.appendChild(styleEl);
+        pDoc.head.appendChild(styleEl);
       }
+      styleEl.textContent = `
+        /* Hide default OS cursor on desktop pointer devices EXCEPT on text inputs */
+        @media (pointer: fine) and (hover: hover) {
+          body, html, *, *::before, *::after {
+            cursor: none !important;
+          }
 
-      // -------------------------------------------------------------
-      // 2. INITIALIZE CURSOR ELEMENT & SMOOTH LERP INERTIA
-      // -------------------------------------------------------------
-      let dot = doc.getElementById('cineverse-cursor-dot');
-      if (!dot) {
-        dot = doc.createElement('div');
-        dot.id = 'cineverse-cursor-dot';
-        doc.body.appendChild(dot);
-      }
+          /* Explicitly restore text caret on typing fields */
+          input, textarea, [contenteditable="true"], [data-testid="stChatInputTextArea"], .stChatInput textarea {
+            cursor: text !important;
+          }
 
-      // Prevent duplicate event handlers on Streamlit reruns
-      if (!win.__cineverse_client_initialized) {
-        win.__cineverse_client_initialized = true;
-
-        let mouseX = -100;
-        let mouseY = -100;
-        let dotX = -100;
-        let dotY = -100;
-        let isVisible = false;
-        let lastHoverCheck = 0;
-
-        function setMousePos(x, y) {
-          mouseX = x;
-          mouseY = y;
-          if (!isVisible && !isTouch) {
-            isVisible = true;
-            dot.style.opacity = '1';
+          /* Ensure clickable buttons show pointer if native cursor is used */
+          button, a, [role="button"], .stButton > button, .carousel-arrow, .card-btn-play, .card-btn-plus, [data-testid="stChatInputSubmitButton"] {
+            cursor: pointer !important;
           }
         }
 
-        win.addEventListener('mousemove', function(e) {
-          setMousePos(e.clientX, e.clientY);
+        /* Solid Vibrant Glowing Yellow Circular Dot Cursor matching video */
+        #cineverse-cursor-dot {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 22px;
+          height: 22px;
+          background-color: #FFD500;
+          border-radius: 50%;
+          pointer-events: none !important;
+          z-index: 2147483647;
+          mix-blend-mode: difference;
+          will-change: transform, width, height, opacity;
+          transform: translate3d(-100px, -100px, 0);
+          box-shadow: 0 0 10px rgba(255, 213, 0, 0.6);
+          transition: width 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                      height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
+                      opacity 0.15s ease;
+          opacity: 0;
+        }
 
-          const now = Date.now();
-          if (now - lastHoverCheck > 40) {
-            lastHoverCheck = now;
-            const target = e.target;
-            if (target && target.closest) {
-              const isInteractive = target.closest('button, a, input, [role="button"], .stButton, .carousel-card, .btn-play, .btn-info, .cineverse-brand-lockup, .card-btn-play, .card-btn-plus');
-              if (isInteractive) {
-                doc.body.classList.add('cursor-hover-interactive');
-              } else {
-                doc.body.classList.remove('cursor-hover-interactive');
+        body.cursor-hover-interactive #cineverse-cursor-dot {
+          width: 38px;
+          height: 38px;
+          background-color: #FFEE00;
+          box-shadow: 0 0 18px rgba(255, 238, 0, 0.85);
+        }
+
+        body.cursor-clicking #cineverse-cursor-dot {
+          width: 16px;
+          height: 16px;
+          box-shadow: 0 0 24px rgba(255, 213, 0, 1);
+        }
+
+        /* Hide the yellow ball when typing so it never obstructs the chat text */
+        body.cursor-over-text-input #cineverse-cursor-dot {
+          opacity: 0 !important;
+        }
+
+        @media (pointer: coarse), (hover: none), (prefers-reduced-motion: reduce) {
+          #cineverse-cursor-dot {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+          }
+        }
+      `;
+
+      // -------------------------------------------------------------
+      // 2. INJECT PERSISTENT ENGINE SCRIPT INTO PARENT WINDOW CONTEXT
+      // (Executes in window.parent scope so it survives all Streamlit reruns!)
+      // -------------------------------------------------------------
+      if (!pDoc.getElementById('cineverse-parent-engine-script')) {
+        const scriptEl = pDoc.createElement('script');
+        scriptEl.id = 'cineverse-parent-engine-script';
+        scriptEl.textContent = `
+          (function() {
+            const doc = document;
+            const win = window;
+
+            const isTouch = win.matchMedia && (
+              win.matchMedia('(pointer: coarse)').matches || 
+              win.matchMedia('(hover: none)').matches
+            );
+
+            let mouseX = -100;
+            let mouseY = -100;
+            let dotX = -100;
+            let dotY = -100;
+            let isVisible = false;
+            let isOverInput = false;
+            let lastHoverCheck = 0;
+
+            function getDot() {
+              let d = doc.getElementById('cineverse-cursor-dot');
+              if (!d) {
+                d = doc.createElement('div');
+                d.id = 'cineverse-cursor-dot';
+                doc.body.appendChild(d);
+              }
+              return d;
+            }
+
+            function setMousePos(x, y) {
+              mouseX = x;
+              mouseY = y;
+              if (!isVisible && !isTouch) {
+                isVisible = true;
+              }
+              const d = getDot();
+              if (d && isVisible && !isTouch && !isOverInput) {
+                d.style.opacity = '1';
               }
             }
-          }
-        }, { passive: true });
 
-        // Listen for iframe mouse coordinates bridge (e.g. from hero slider)
-        win.addEventListener('message', function(e) {
-          if (e && e.data && e.data.type === 'cineverse_mouse_move') {
-            const iframes = doc.querySelectorAll('iframe');
-            for (let f of iframes) {
-              try {
-                if (f.contentWindow === e.source) {
-                  const rect = f.getBoundingClientRect();
-                  setMousePos(rect.left + e.data.x, rect.top + e.data.y);
-                  break;
+            win.addEventListener('mousemove', function(e) {
+              setMousePos(e.clientX, e.clientY);
+
+              const now = Date.now();
+              if (now - lastHoverCheck > 30) {
+                lastHoverCheck = now;
+                const target = e.target;
+                if (target && target.closest) {
+                  // Check if hovering over text input / textarea / chat input
+                  const isInput = target.closest('input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]), textarea, [contenteditable="true"], [data-testid="stChatInputTextArea"], .stChatInput textarea');
+                  if (isInput) {
+                    isOverInput = true;
+                    doc.body.classList.add('cursor-over-text-input');
+                    doc.body.classList.remove('cursor-hover-interactive');
+                  } else {
+                    isOverInput = false;
+                    doc.body.classList.remove('cursor-over-text-input');
+                    const isInteractive = target.closest('button, a, [role="button"], .stButton, .carousel-card, .btn-play, .btn-info, .cineverse-brand-lockup, .card-btn-play, .card-btn-plus, [data-testid="stChatInputSubmitButton"]');
+                    if (isInteractive) {
+                      doc.body.classList.add('cursor-hover-interactive');
+                    } else {
+                      doc.body.classList.remove('cursor-hover-interactive');
+                    }
+                  }
                 }
-              } catch (err) {}
-            }
-          }
-        });
+              }
+            }, { passive: true });
 
-        win.addEventListener('mousedown', function() {
-          doc.body.classList.add('cursor-clicking');
-        }, { passive: true });
-
-        win.addEventListener('mouseup', function() {
-          doc.body.classList.remove('cursor-clicking');
-        }, { passive: true });
-
-        win.addEventListener('mouseleave', function() {
-          isVisible = false;
-          dot.style.opacity = '0';
-        }, { passive: true });
-
-        // High-framerate animation loop with smooth lerp interpolation
-        function animLoop() {
-          if (isVisible && !isTouch) {
-            dotX += (mouseX - dotX) * 0.24;
-            dotY += (mouseY - dotY) * 0.24;
-            const size = doc.body.classList.contains('cursor-hover-interactive') ? 38 : (doc.body.classList.contains('cursor-clicking') ? 16 : 22);
-            dot.style.transform = 'translate3d(' + (dotX - size / 2) + 'px, ' + (dotY - size / 2) + 'px, 0)';
-          }
-          win.requestAnimationFrame(animLoop);
-        }
-        win.requestAnimationFrame(animLoop);
-      }
-
-      // -------------------------------------------------------------
-      // 3. HORIZONTAL MOVIE CAROUSEL LOGIC (DRAG, ARROWS & PROGRESS BAR)
-      // -------------------------------------------------------------
-      function initMovieCarousels() {
-        const wrappers = doc.querySelectorAll('.movie-carousel-wrapper');
-        wrappers.forEach(wrap => {
-          if (wrap.getAttribute('data-carousel-ready') === 'true') return;
-          wrap.setAttribute('data-carousel-ready', 'true');
-
-          const track = wrap.querySelector('.movie-carousel-track');
-          const bar = wrap.querySelector('.carousel-progress-bar');
-          const btnPrev = wrap.querySelector('.carousel-arrow-prev');
-          const btnNext = wrap.querySelector('.carousel-arrow-next');
-
-          if (!track) return;
-
-          function updateProgressBar() {
-            if (!bar) return;
-            const maxScroll = track.scrollWidth - track.clientWidth;
-            if (maxScroll <= 0) {
-              bar.style.width = '100%';
-              bar.style.left = '0%';
-              return;
-            }
-            const ratio = Math.max(0.18, Math.min(0.40, track.clientWidth / track.scrollWidth));
-            const barWidthPct = ratio * 100;
-            const maxLeft = 100 - barWidthPct;
-            const pct = Math.max(0, Math.min(1, track.scrollLeft / maxScroll));
-            bar.style.width = barWidthPct + '%';
-            bar.style.left = (pct * maxLeft) + '%';
-          }
-
-          track.addEventListener('scroll', updateProgressBar, { passive: true });
-          win.addEventListener('resize', updateProgressBar, { passive: true });
-          setTimeout(updateProgressBar, 150);
-
-          if (btnPrev) {
-            btnPrev.addEventListener('click', (e) => {
-              e.preventDefault();
-              track.scrollBy({ left: -track.clientWidth * 0.72, behavior: 'smooth' });
+            // Listen for iframe mouse coordinates bridge
+            win.addEventListener('message', function(e) {
+              if (e && e.data && e.data.type === 'cineverse_mouse_move') {
+                const iframes = doc.querySelectorAll('iframe');
+                for (let f of iframes) {
+                  try {
+                    if (f.contentWindow === e.source) {
+                      const rect = f.getBoundingClientRect();
+                      setMousePos(rect.left + e.data.x, rect.top + e.data.y);
+                      break;
+                    }
+                  } catch (err) {}
+                }
+              }
             });
-          }
 
-          if (btnNext) {
-            btnNext.addEventListener('click', (e) => {
-              e.preventDefault();
-              track.scrollBy({ left: track.clientWidth * 0.72, behavior: 'smooth' });
-            });
-          }
+            win.addEventListener('mousedown', function() {
+              doc.body.classList.add('cursor-clicking');
+            }, { passive: true });
 
-          // Mouse drag-to-scroll behavior
-          let isDragging = false;
-          let startX = 0;
-          let scrollStart = 0;
-          let movedDist = 0;
+            win.addEventListener('mouseup', function() {
+              doc.body.classList.remove('cursor-clicking');
+            }, { passive: true });
 
-          track.addEventListener('mousedown', (e) => {
-            if (e.target.closest('a, button')) return;
-            isDragging = true;
-            movedDist = 0;
-            startX = e.pageX - track.offsetLeft;
-            scrollStart = track.scrollLeft;
-            track.classList.add('is-dragging');
-          });
+            win.addEventListener('mouseleave', function() {
+              isVisible = false;
+              const d = getDot();
+              if (d) d.style.opacity = '0';
+            }, { passive: true });
 
-          win.addEventListener('mouseup', () => {
-            if (isDragging) {
-              isDragging = false;
-              track.classList.remove('is-dragging');
+            win.addEventListener('mouseenter', function() {
+              if (!isTouch && !isOverInput) {
+                isVisible = true;
+                const d = getDot();
+                if (d) d.style.opacity = '1';
+              }
+            }, { passive: true });
+
+            // High-framerate animation loop in parent context
+            function animLoop() {
+              if (isVisible && !isTouch) {
+                dotX += (mouseX - dotX) * 0.28;
+                dotY += (mouseY - dotY) * 0.28;
+                const d = getDot();
+                if (d) {
+                  const isHover = doc.body.classList.contains('cursor-hover-interactive');
+                  const isClick = doc.body.classList.contains('cursor-clicking');
+                  const size = isHover ? 38 : (isClick ? 16 : 22);
+                  d.style.transform = 'translate3d(' + (dotX - size / 2) + 'px, ' + (dotY - size / 2) + 'px, 0)';
+                  if (isOverInput) {
+                    d.style.opacity = '0';
+                  } else {
+                    d.style.opacity = '1';
+                  }
+                }
+              }
+              win.requestAnimationFrame(animLoop);
             }
-          });
+            win.requestAnimationFrame(animLoop);
 
-          track.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            e.preventDefault();
-            const x = e.pageX - track.offsetLeft;
-            const walk = (x - startX) * 1.5;
-            movedDist += Math.abs(walk);
-            track.scrollLeft = scrollStart - walk;
-          });
+            // -----------------------------------------------------------
+            // 3. HORIZONTAL MOVIE CAROUSEL LOGIC IN PARENT CONTEXT
+            // -----------------------------------------------------------
+            function initMovieCarousels() {
+              const wrappers = doc.querySelectorAll('.movie-carousel-wrapper');
+              wrappers.forEach(wrap => {
+                if (wrap.getAttribute('data-carousel-ready') === 'true') return;
+                wrap.setAttribute('data-carousel-ready', 'true');
 
-          // Prevent clicking card links if user dragged
-          track.addEventListener('click', (e) => {
-            if (movedDist > 8) {
-              e.preventDefault();
-              e.stopPropagation();
+                const track = wrap.querySelector('.movie-carousel-track');
+                const bar = wrap.querySelector('.carousel-progress-bar');
+                const btnPrev = wrap.querySelector('.carousel-arrow-prev');
+                const btnNext = wrap.querySelector('.carousel-arrow-next');
+
+                if (!track) return;
+
+                function updateProgressBar() {
+                  if (!bar) return;
+                  const maxScroll = track.scrollWidth - track.clientWidth;
+                  if (maxScroll <= 0) {
+                    bar.style.width = '100%';
+                    bar.style.left = '0%';
+                    return;
+                  }
+                  const ratio = Math.max(0.18, Math.min(0.40, track.clientWidth / track.scrollWidth));
+                  const barWidthPct = ratio * 100;
+                  const maxLeft = 100 - barWidthPct;
+                  const pct = Math.max(0, Math.min(1, track.scrollLeft / maxScroll));
+                  bar.style.width = barWidthPct + '%';
+                  bar.style.left = (pct * maxLeft) + '%';
+                }
+
+                track.addEventListener('scroll', updateProgressBar, { passive: true });
+                win.addEventListener('resize', updateProgressBar, { passive: true });
+                setTimeout(updateProgressBar, 150);
+
+                if (btnPrev) {
+                  btnPrev.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    track.scrollBy({ left: -track.clientWidth * 0.72, behavior: 'smooth' });
+                  });
+                }
+
+                if (btnNext) {
+                  btnNext.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    track.scrollBy({ left: track.clientWidth * 0.72, behavior: 'smooth' });
+                  });
+                }
+
+                // Mouse drag-to-scroll behavior
+                let isDragging = false;
+                let startX = 0;
+                let scrollStart = 0;
+                let movedDist = 0;
+
+                track.addEventListener('mousedown', (e) => {
+                  if (e.target.closest('a, button')) return;
+                  isDragging = true;
+                  movedDist = 0;
+                  startX = e.pageX - track.offsetLeft;
+                  scrollStart = track.scrollLeft;
+                  track.classList.add('is-dragging');
+                });
+
+                win.addEventListener('mouseup', () => {
+                  if (isDragging) {
+                    isDragging = false;
+                    track.classList.remove('is-dragging');
+                  }
+                });
+
+                track.addEventListener('mousemove', (e) => {
+                  if (!isDragging) return;
+                  e.preventDefault();
+                  const x = e.pageX - track.offsetLeft;
+                  const walk = (x - startX) * 1.5;
+                  movedDist += Math.abs(walk);
+                  track.scrollLeft = scrollStart - walk;
+                });
+
+                // Prevent clicking card links if user dragged
+                track.addEventListener('click', (e) => {
+                  if (movedDist > 8) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                }, true);
+
+                // Horizontal mousewheel support
+                track.addEventListener('wheel', (e) => {
+                  if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                    track.scrollLeft += e.deltaY * 0.95;
+                  }
+                }, { passive: true });
+              });
             }
-          }, true);
 
-          // Horizontal mousewheel support
-          track.addEventListener('wheel', (e) => {
-            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-              track.scrollLeft += e.deltaY * 0.95;
-            }
-          }, { passive: true });
-        });
+            initMovieCarousels();
+            setInterval(initMovieCarousels, 600);
+          })();
+        `;
+        pDoc.head.appendChild(scriptEl);
       }
-
-      // Run carousel init now and watch for Streamlit page updates
-      initMovieCarousels();
-      setInterval(initMovieCarousels, 800);
-
     } catch (err) {
       console.debug('Cineverse client error:', err);
     }

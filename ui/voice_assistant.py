@@ -12,7 +12,7 @@ from ui.components import render_html
 def render_floating_ai_widget(user: dict):
     """Renders the persistent floating AI pill docked on the side of every page."""
     # Don't show floating pill if user is already on the AI Assistant page
-    if st.session_state.get("nav_selection") in ["✦ AI Assistant", "✨ AI Assistant"]:
+    if "AI Assistant" in str(st.session_state.get("nav_selection", "")):
         return
 
     # Render floating pill as a native Streamlit button with fixed bottom-right dock styling

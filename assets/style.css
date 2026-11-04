@@ -812,17 +812,19 @@ div.stButton > button[kind="primary"]:hover {
     margin-top: 4px;
 }
 
-/* Default mouse cursor remains visible and interactive */
+/* Custom Neon-Yellow Animated Cursor matching video */
 @media (pointer: fine) and (hover: hover) {
     body, html, *, *::before, *::after {
-        cursor: auto;
+        cursor: none !important;
     }
-    button, a, [role="button"], .stButton > button, div[data-baseweb="select"] {
+    input, textarea, [contenteditable="true"], [data-testid="stChatInputTextArea"], .stChatInput textarea {
+        cursor: text !important;
+    }
+    button, a, [role="button"], .stButton > button, div[data-baseweb="select"], .carousel-arrow, .card-btn-play, .card-btn-plus, [data-testid="stChatInputSubmitButton"] {
         cursor: pointer !important;
     }
 }
 
-/* Custom Neon-Yellow Animated Cursor matching video */
 #cineverse-cursor-dot {
     position: fixed;
     top: 0;
@@ -834,7 +836,6 @@ div.stButton > button[kind="primary"]:hover {
     pointer-events: none !important;
     z-index: 2147483647;
     mix-blend-mode: difference;
-    transform: translate(-50%, -50%);
     box-shadow: 0 0 10px rgba(255, 213, 0, 0.6);
     transition: width 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
                 height 0.18s cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -853,6 +854,10 @@ body.cursor-clicking #cineverse-cursor-dot {
     width: 16px;
     height: 16px;
     box-shadow: 0 0 24px rgba(255, 213, 0, 1);
+}
+
+body.cursor-over-text-input #cineverse-cursor-dot {
+    opacity: 0 !important;
 }
 
 /* ==============================================================================
