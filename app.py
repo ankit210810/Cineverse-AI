@@ -142,7 +142,7 @@ if supabase_user:
 if "toggle_wl" in st.query_params:
     try:
         twl_mid = int(st.query_params.get("toggle_wl", 0))
-        from services.user_service import is_in_watchlist, add_to_watchlist, remove_from_watchlist
+        from services.feedback_service import is_in_watchlist, add_to_watchlist, remove_from_watchlist
         uid = current_user.get("user_id", 42)
         if is_in_watchlist(uid, twl_mid):
             remove_from_watchlist(uid, twl_mid)

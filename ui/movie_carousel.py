@@ -11,7 +11,7 @@ from typing import Dict, List, Any, Optional
 import html
 from ui.components import render_html
 from services.poster_service import get_movie_poster_url
-from services.user_service import is_in_watchlist
+from services.feedback_service import is_in_watchlist
 
 FALLBACK_POSTER = "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg"
 

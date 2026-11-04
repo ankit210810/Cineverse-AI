@@ -279,3 +279,11 @@ def get_user_taste_profile(user_id: int) -> Dict[str, Any]:
         }
     finally:
         conn.close()
+
+
+# Re-exports for convenience
+try:
+    from services.feedback_service import is_in_watchlist, add_to_watchlist, remove_from_watchlist, get_watchlist
+except ImportError:
+    pass
+
