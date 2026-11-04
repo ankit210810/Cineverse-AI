@@ -140,7 +140,7 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
 
     nav_items = [
         ("Home", "🏠 Home", "home"),
-        ("TV Series", "🎬 Series", "series"),
+        ("Series", "🎬 Series", "series"),
         ("Movies", "📽️ Movies", "movies"),
         ("My List", "📺 My List", "my_list"),
         ("AI Assistant", "✨ AI Assistant", "assistant"),
@@ -164,7 +164,7 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
             """)
 
         with col_menu:
-            col_weights = [1.0, 1.1, 1.0, 1.0, 1.3, 1.0] if is_admin else [1.0, 1.1, 1.0, 1.0, 1.3]
+            col_weights = [1.0, 1.0, 1.0, 1.1, 1.3, 1.0] if is_admin else [1.0, 1.0, 1.0, 1.1, 1.3]
             menu_cols = st.columns(col_weights, vertical_alignment="center")
             for i, (label, target, slug) in enumerate(nav_items):
                 with menu_cols[i]:
