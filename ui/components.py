@@ -140,10 +140,8 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
 
     nav_items = [
         ("Home", "🏠 Home", "home"),
-        ("Series", "🎬 Series", "series"),
+        ("TV Series", "🎬 Series", "series"),
         ("Movies", "📽️ Movies", "movies"),
-        ("Anime", "🎌 Anime", "anime"),
-        ("New & Hot", "🔥 New & Hot", "new_hot"),
         ("My List", "📺 My List", "my_list"),
         ("AI Assistant", "✨ AI Assistant", "assistant"),
     ]
@@ -153,7 +151,7 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
     logo_b64 = get_logo_base64()
 
     with st.container(key="duckshow_navbar_container"):
-        col_brand, col_menu, col_right = st.columns([1.4, 7.2, 1.4], vertical_alignment="center")
+        col_brand, col_menu, col_right = st.columns([1.5, 7.1, 1.4], vertical_alignment="center")
 
         with col_brand:
             logo_img_tag = f'<img src="data:image/png;base64,{logo_b64}" class="cineverse-nav-full-logo" alt="Cineverse" />' if logo_b64 else '<div class="cineverse-nav-wordmark"><span class="cineverse-word-cine">Cine</span><span class="cineverse-word-verse">verse</span></div>'
@@ -166,7 +164,7 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
             """)
 
         with col_menu:
-            col_weights = [0.8, 0.9, 0.9, 0.8, 1.3, 1.1, 1.5, 0.8] if is_admin else [0.9, 1.0, 1.0, 0.9, 1.4, 1.2, 1.6]
+            col_weights = [1.0, 1.1, 1.0, 1.0, 1.3, 1.0] if is_admin else [1.0, 1.1, 1.0, 1.0, 1.3]
             menu_cols = st.columns(col_weights, vertical_alignment="center")
             for i, (label, target, slug) in enumerate(nav_items):
                 with menu_cols[i]:
@@ -177,7 +175,7 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
                         st.rerun()
 
         with col_right:
-            c_search, c_bell, c_avatar = st.columns([1.2, 0.9, 1.1], vertical_alignment="center")
+            c_search, c_bell, c_avatar = st.columns([1.1, 0.9, 1.2], vertical_alignment="center")
             with c_search:
                 with st.popover("🔍", help="Search movies, genres & moods"):
                     search_query = st.text_input(
@@ -196,11 +194,11 @@ def render_duckshow_navbar(current_user: Dict[str, Any]):
                 render_html("""
                     <div class="duckshow-bell-icon" title="Notifications">
                         🔔
-                        <span class="duckshow-bell-dot"></span>
+                        <span class="duckshow-bell-count">3</span>
                     </div>
                 """)
             with c_avatar:
-                if st.button(initials, key="dnav_user_ak_btn", help=f"Profile: {display_name} (Administrator)"):
+                if st.button("😊", key="dnav_user_ak_btn", help=f"Profile: {display_name} (Administrator)"):
                     st.session_state["nav_selection"] = "👤 Profile"
                     st.rerun()
 

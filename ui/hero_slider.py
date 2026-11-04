@@ -299,23 +299,24 @@ def render_netflix_hero_slider():
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background: #FFD500;
-            color: #070510;
-            padding: 10px 24px;
-            border-radius: 10px;
-            font-size: 0.95rem;
+            background: #FFFFFF;
+            color: #000000;
+            padding: 9px 24px;
+            border-radius: 5px;
+            font-size: 1rem;
             font-weight: 800;
             text-decoration: none;
-            box-shadow: 0 0 24px rgba(255, 213, 0, 0.45);
-            transition: all 0.22s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             border: none;
         }}
         
         .btn-play:hover {{
-            background: #FFE14D;
-            transform: translateY(-2px) scale(1.03);
-            box-shadow: 0 0 32px rgba(255, 213, 0, 0.7);
+            background: rgba(255, 255, 255, 0.85);
+            color: #000000;
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
         }}
         
         .btn-info {{
@@ -323,23 +324,42 @@ def render_netflix_hero_slider():
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(109, 109, 110, 0.7);
             color: #FFFFFF;
-            padding: 10px 22px;
-            border-radius: 10px;
-            font-size: 0.95rem;
+            padding: 9px 22px;
+            border-radius: 5px;
+            font-size: 1rem;
             font-weight: 700;
             text-decoration: none;
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            transition: all 0.22s ease;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }}
         
         .btn-info:hover {{
-            background: rgba(255, 255, 255, 0.24);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.45);
+            background: rgba(109, 109, 110, 0.45);
+            color: #FFFFFF;
+            border-color: rgba(255, 255, 255, 0.35);
+            transform: scale(1.02);
+        }}
+
+        /* Maturity rating badge (e.g. U/A 16+) matching Netflix */
+        .hero-maturity-badge {{
+            position: absolute;
+            right: 0;
+            bottom: 40px;
+            background: rgba(51, 51, 51, 0.65);
+            backdrop-filter: blur(8px);
+            border-left: 3.5px solid #E5E5E5;
+            color: #E5E5E5;
+            padding: 4px 18px 4px 12px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            z-index: 5;
+            user-select: none;
         }}
         
         /* Navigation Arrows */
@@ -511,6 +531,7 @@ def render_netflix_hero_slider():
                         </a>
                     </div>
                 </div>
+                <div class="hero-maturity-badge">U/A 16+</div>
             `;
             slidesContainer.appendChild(slide);
             
