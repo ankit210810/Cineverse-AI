@@ -44,7 +44,11 @@ def get_logo_base64() -> str:
 
 def render_html(content: str):
     """Safely renders HTML without Markdown indentation treating lines as code blocks."""
-    st.markdown(dedent(content).strip(), unsafe_allow_html=True)
+    if hasattr(st, "html"):
+        st.html(content)
+    else:
+        clean_lines = [line.strip() for line in content.splitlines()]
+        st.markdown("\n".join(clean_lines), unsafe_allow_html=True)
 
 
 def render_hero(title: str, subtitle: str, user_name: Optional[str] = None):

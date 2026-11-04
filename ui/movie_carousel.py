@@ -57,53 +57,53 @@ def render_movie_carousel(
         wl_icon = "✓" if in_wl else "+"
         wl_title = "Remove from My List" if in_wl else "Add to My List"
 
-        card_markup = f"""
-            <div class="carousel-card" data-movie-id="{mid}">
-                <div class="card-poster-bg" style="background-image: url('{poster_url}');"></div>
-                <div class="card-glass-overlay">
-                    <div class="card-top-actions">
-                        <a href="?toggle_wl={mid}" target="_self" class="card-btn-plus" title="{wl_title}">{wl_icon}</a>
-                    </div>
-                    <div class="card-center-play-wrap">
-                        <a href="?play={mid}" target="_self" class="card-btn-play" title="Play Demo of {escaped_title}">
-                            <span class="card-play-triangle">▶</span>
-                        </a>
-                    </div>
-                    <div class="card-bottom-info">
-                        <div class="card-tags">
-                            <span class="card-tag">{genre_badge}</span>
-                            <span class="card-tag">{quality_badge}</span>
-                        </div>
-                        <a href="?info={mid}" target="_self" class="card-title-link">
-                            <div class="card-movie-title" title="{escaped_title}">{escaped_title}</div>
-                        </a>
-                        <div class="card-movie-sub">{year} • {genre_badge} • ★ {rating_str}</div>
-                    </div>
-                </div>
-            </div>
-        """
+        card_markup = (
+            f'<div class="carousel-card" data-movie-id="{mid}">'
+            f'<div class="card-poster-bg" style="background-image: url(\'{poster_url}\');"></div>'
+            f'<div class="card-glass-overlay">'
+            f'<div class="card-top-actions">'
+            f'<a href="?toggle_wl={mid}" target="_self" class="card-btn-plus" title="{wl_title}">{wl_icon}</a>'
+            f'</div>'
+            f'<div class="card-center-play-wrap">'
+            f'<a href="?play={mid}" target="_self" class="card-btn-play" title="Play Demo of {escaped_title}">'
+            f'<span class="card-play-triangle">▶</span>'
+            f'</a>'
+            f'</div>'
+            f'<div class="card-bottom-info">'
+            f'<div class="card-tags">'
+            f'<span class="card-tag">{genre_badge}</span>'
+            f'<span class="card-tag">{quality_badge}</span>'
+            f'</div>'
+            f'<a href="?info={mid}" target="_self" class="card-title-link">'
+            f'<div class="card-movie-title" title="{escaped_title}">{escaped_title}</div>'
+            f'</a>'
+            f'<div class="card-movie-sub">{year} • {genre_badge} • ★ {rating_str}</div>'
+            f'</div>'
+            f'</div>'
+            f'</div>'
+        )
         cards_html.append(card_markup)
 
-    all_cards = "\n".join(cards_html)
+    all_cards = "".join(cards_html)
 
-    markup = f"""
-        <div class="carousel-section-container" id="section-{carousel_id}">
-            <div class="carousel-section-header">
-                <h2 class="carousel-section-title">
-                    {html.escape(title_prefix)} <span class="carousel-title-highlight">{html.escape(highlight_word)}</span>
-                </h2>
-                <a href="{view_all_link}" target="_self" class="carousel-view-all">VIEW ALL &gt;</a>
-            </div>
-            <div class="movie-carousel-wrapper" id="{carousel_id}">
-                <button class="carousel-arrow carousel-arrow-prev" aria-label="Scroll Left">❮</button>
-                <div class="movie-carousel-track">
-                    {all_cards}
-                </div>
-                <button class="carousel-arrow carousel-arrow-next" aria-label="Scroll Right">❯</button>
-                <div class="carousel-progress-track">
-                    <div class="carousel-progress-bar"></div>
-                </div>
-            </div>
-        </div>
-    """
+    markup = (
+        f'<div class="carousel-section-container" id="section-{carousel_id}">'
+        f'<div class="carousel-section-header">'
+        f'<h2 class="carousel-section-title">'
+        f'{html.escape(title_prefix)} <span class="carousel-title-highlight">{html.escape(highlight_word)}</span>'
+        f'</h2>'
+        f'<a href="{view_all_link}" target="_self" class="carousel-view-all">VIEW ALL &gt;</a>'
+        f'</div>'
+        f'<div class="movie-carousel-wrapper" id="{carousel_id}">'
+        f'<button class="carousel-arrow carousel-arrow-prev" aria-label="Scroll Left">❮</button>'
+        f'<div class="movie-carousel-track">'
+        f'{all_cards}'
+        f'</div>'
+        f'<button class="carousel-arrow carousel-arrow-next" aria-label="Scroll Right">❯</button>'
+        f'<div class="carousel-progress-track">'
+        f'<div class="carousel-progress-bar"></div>'
+        f'</div>'
+        f'</div>'
+        f'</div>'
+    )
     render_html(markup)
